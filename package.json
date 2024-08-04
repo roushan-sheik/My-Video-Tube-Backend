@@ -1,0 +1,20 @@
+{
+  "name": "advanced-backend",
+  "version": "1.0.0",
+  "description": "- [Model Link: ](https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.2"
+  }
+}
