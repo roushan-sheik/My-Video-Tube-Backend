@@ -7,11 +7,16 @@
   "scripts": {
     "dev": "nodemon src/app.js"
   },
-  "keywords": [],
+  "keywords": [
+    "Backend",
+    "NodeJs",
+    "Express"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
   },
   "dependencies": {
     "express": "^4.19.2",
