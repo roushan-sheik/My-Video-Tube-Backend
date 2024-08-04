@@ -1,5 +1,5 @@
 {
-  "name": "advanced-backend",
+  "name": "My Video Tube",
   "version": "1.0.0",
   "description": "- [Model Link: ](https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj)",
   "main": "index.js",
@@ -8,6 +8,7 @@
     "dev": "nodemon src/app.js"
   },
   "keywords": [
+    "MyVideoTube",
     "Backend",
     "NodeJs",
     "Express"
@@ -19,6 +20,7 @@
     "prettier": "^3.3.3"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.5.2"
   }
