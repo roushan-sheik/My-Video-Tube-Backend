@@ -1,13 +1,24 @@
 import mongoose from "mongoose";
-import { DB_NAME } from "./../constants.js";
 
 const connectDB = async () => {
-  try {
-    const dbURI = `${process.env.MONGO_URI}/${DB_NAME}`;
-    if (!process.env.MONGO_URI) {
-      throw new Error("MONGO_URI is not defined in .env file");
+  try
+  {
+    // connection string making 
+    let connectionUri = process.env.MONGO_URI;
+    connectionUri = connectionUri.replace(
+      "<username>",
+      process.env.MONGO_USER_NAME
+    );
+    connectionUri = connectionUri.replace(
+      "<password>",
+      process.env.MONGO_USER_PASSWORD
+    );
+    connectionUri = `${connectionUri}/${process.env.DB_NAME}`;
+    if (!connectionUri) {
+      throw new Error("MONGO_URI is not defined in .env FILE");
     }
-    const connectionInstance = await mongoose.connect(dbURI);
+
+    const connectionInstance = await mongoose.connect(connectionUri);
     console.log(
       `\n MongoDB Connected !! DB HOST: ${connectionInstance.connection.host}`
     );
