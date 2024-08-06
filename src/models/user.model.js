@@ -77,5 +77,18 @@ userSchema.methods.generateAccessToken = async function () {
     }
   );
 };
+// jwt refresh token custom method
+userSchema.methods.generateRefreshToken = async function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    }
+  );
+};
+// jwt refresh token custom method
 
 export const User = model("User", userSchema);
