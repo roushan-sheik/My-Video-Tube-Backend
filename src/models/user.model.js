@@ -3,7 +3,7 @@ import { model, Schema } from "mongoose";
 
 const userSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
       required: true,
       unique: true,
@@ -57,5 +57,9 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
+// mongoose custom method for compare password
+userSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 export const User = model("User", userSchema);
