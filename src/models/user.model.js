@@ -1,3 +1,4 @@
+import { bcrypt } from "b";
 import { model, Schema } from "mongoose";
 
 const userSchema = new Schema(
@@ -47,5 +48,14 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
-const User = model("User", userSchema);
-export default User;
+// middleware
+// Hash user password before save the user
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = bcrypt.hash(this.password, 10);
+    next();
+  }
+  next();
+});
+
+export const User = model("User", userSchema);
