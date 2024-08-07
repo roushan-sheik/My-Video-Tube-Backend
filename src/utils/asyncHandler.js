@@ -1,26 +1,16 @@
-import { Promise } from "mongoose";
-
-const asyncHandler = (requestHandler) => {
-  (req, res, next) => {
-    Promise.resolve(requestHandler(req, res, next)).catch((error) =>
-      next(error)
-    );
+/**
+ * A utility function to wrap asynchronous route handlers.
+ * It ensures that any errors are passed to the Express error handler middleware.
+ *
+ * @param {Function} fn - The asynchronous route handler function.
+ * @returns {Function} A function that wraps the route handler and handles errors.
+ */
+const asyncHandler = (fn) => {
+  return (req, res, next) => {
+    Promise.resolve(
+      fn( req, res, next )
+    ).catch( next );
   };
 };
 
-
 export { asyncHandler };
-
-//**NOTE -  Try catch way
-// const asyncHandler = (func) => async (req, res, next) => {
-//   try {
-//     await func(req, res, next);
-//   } catch (error) {
-//     res.status(error.status).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// export { asyncHandler };
