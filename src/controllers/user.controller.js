@@ -1,5 +1,6 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   //  Write down ths steps
@@ -12,6 +13,12 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required.");
   }
   // 3. Check user is already exists: name , email
+  const existedUser = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+  if (existedUser) {
+    throw new ApiError(409, "User with email or username already exists.");
+  }
   // 4. Check for images, check for avatar
   // 5. Upload to them cloudinary, avatar check
   // 6. Create user object,
