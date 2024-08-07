@@ -44,25 +44,27 @@ const userSchema = new Schema(
       required: [true, "Password is required"],
     },
     refreshToken: {
-      type: true,
+      type: Boolean,
     },
   },
   { timestamps: true }
 );
 // middleware
+//* 1. Hash the user password before save the user.
+//* 2. Create a isPasswordCorrect mongoose custom method.
+//* 3. Create a jwt generateAccessToken custom method
+//* 4. Create a jwt generateRefreshToken custom method
 // Hash user password before save the user
 userSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
-    this.password = bcrypt.hash(this.password, 10);
-    next();
-  }
+  if (!this.isModified("password")) return next();
+  this.password = bcrypt.hash(this.password, 10);
   next();
 });
 // mongoose custom method for compare password
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
-// jwt access token custom method
+// create a jwt access token custom method
 userSchema.methods.generateAccessToken = async function () {
   return jwt.sign(
     {
@@ -89,6 +91,5 @@ userSchema.methods.generateRefreshToken = async function () {
     }
   );
 };
-// jwt refresh token custom method
 
 export const User = model("User", userSchema);
