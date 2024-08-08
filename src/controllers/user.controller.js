@@ -33,10 +33,10 @@ const registerUser = asyncHandler(async (req, res) => {
   const avatar = await uploadOnCloud(avatarLocalPath);
   const coverImage = await uploadOnCloud(coverImageLocalPath);
 
-  if (!avatar) {
+  if (!avatar || !coverImage) {
     throw new ApiError(
       400,
-      "Avatar file is required after cloudinary response"
+      "Avatar and coverImage file is required after cloudinary response"
     );
   }
   // 6. Create user object,
@@ -45,7 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
     fullName,
     avatar: avatar,
-    coverImage: coverImage || "",
+    coverImage: coverImage ,
     email,
     password,
   });

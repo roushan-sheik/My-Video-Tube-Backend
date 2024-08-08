@@ -19,6 +19,7 @@ export async function uploadOnCloud(filePath) {
       console.log(error);
       fs.unlinkSync(filePath);
     });
+  fs.unlinkSync(filePath);
 
   return response.url;
 }
