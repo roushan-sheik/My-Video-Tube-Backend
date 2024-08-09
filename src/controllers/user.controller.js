@@ -4,6 +4,23 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloud } from "../utils/Cloudinary.js";
 
+// token generate method
+const generateAccessAndRefreshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Some thing went wrong while generating access and refresh tokens."
+    );
+  }
+};
+
 const registerUser = asyncHandler(async (req, res) => {
   //  Write down ths steps
   // 1. Get user details from frontend
@@ -70,21 +87,25 @@ const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
   // 2. username or email based login
   if (!username || !email) {
-    throw new Error(400, "Email or user name is required.");
+    throw new ApiError(400, "Email or user name is required.");
   }
   // 3. find the user
   const user = await User.findOne({
     $or: [{ username }, { email }],
   });
   if (!user) {
-    throw new Error(404, "User dose not exists.");
+    throw new ApiError(404, "User dose not exists.");
   }
   // 4. password check
   const isValidPassword = await user.isValidPassword(password);
   if (!isValidPassword) {
-    throw new Error(401, "Invalid user credentials.");
+    throw new ApiError(401, "Invalid user credentials.");
   }
   // 5. Generate Access or Refresh Token
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+  
   // 6. Set Token to Cookie
   // 7. Send Response
 });
