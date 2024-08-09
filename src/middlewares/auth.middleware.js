@@ -4,6 +4,12 @@ import { ApiError } from "../utils/ApiError.js";
 
 export const verifyToken = asyncHandler(async (req, res, next) => {
   try {
+    // 1. get token from cookies or Authorization Header
+    // 2. don't have any token throw an error
+    // 3. Decoded the token
+    // 4. find user by id from decoded token
+    // 5. don't have user throw an error
+    // 6. set the user to = req.user = user  next()
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");

@@ -109,7 +109,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
-  // 6. Set Token to Cookie
+  // 6. Set Token to Cookie and Send Response
   const cookieOptions = {
     httpOnly: true,
     secure: true,
@@ -129,6 +129,33 @@ const loginUser = asyncHandler(async (req, res) => {
         "User logged In successfully"
       )
     );
-  // 7. Send Response
 });
-export { loginUser, registerUser };
+// Logout user route
+
+const logoutUser = asyncHandler(async (req, res) => {
+  //  logout user
+  // 1. Inject a middleware that ste the user to req.user
+  // 2. find user by req.user._id  and delete refresh token
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: undefined,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  // 3. remove all the cookies from the user and send response
+  const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+  };
+  res
+    .status(200)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
+    .json(new ApiResponse(200, {}, "Logout successful"));
+});
+export { loginUser, logoutUser, registerUser };
