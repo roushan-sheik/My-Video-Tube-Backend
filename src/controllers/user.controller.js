@@ -45,7 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
     fullName,
     avatar: avatar,
-    coverImage: coverImage ,
+    coverImage: coverImage,
     email,
     password,
   });
@@ -63,4 +63,29 @@ const registerUser = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, createdUser, "User registered successfully."));
 });
-export { registerUser };
+// Login User controller
+
+const loginUser = asyncHandler(async (req, res) => {
+  // 1. get data from req body
+  const { username, email, password } = req.body;
+  // 2. username or email based login
+  if (!username || !email) {
+    throw new Error(400, "Email or user name is required.");
+  }
+  // 3. find the user
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+  if (!user) {
+    throw new Error(404, "User dose not exists.");
+  }
+  // 4. password check
+  const isValidPassword = await user.isValidPassword(password);
+  if (!isValidPassword) {
+    throw new Error(401, "Invalid user credentials.");
+  }
+  // 5. Generate Access or Refresh Token
+  // 6. Set Token to Cookie
+  // 7. Send Response
+});
+export { loginUser, registerUser };
